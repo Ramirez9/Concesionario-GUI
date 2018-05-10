@@ -1,5 +1,6 @@
 package concesionario;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,8 @@ public class Fichero implements Serializable{
 	 * Serial version
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static File file;
 
 	/**
 	 * Método para abrir un concesionario existente
@@ -28,7 +31,7 @@ public class Fichero implements Serializable{
 	public static Concesionario abrir(File file) throws  IOException, ClassNotFoundException
 	{
 		file = comprobarExtension(file);
-		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+		try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
 			return (Concesionario) in.readObject();
 		}
 	}
@@ -68,10 +71,19 @@ public class Fichero implements Serializable{
 	 *            Representa el fichero a comprobar
 	 * @return Fichero con la extensión válida
 	 */
-	static File comprobarExtension(File file) {
-		String path = file.getPath();
-        if (!path.endsWith(".obj"))
-            return new File(path + ".obj");
+	private static File comprobarExtension(File file) {
+	    String path = file.getPath();
+	    if (!path.endsWith(".obj"))
+	      return new File(path + ".obj");
+	    return new File(path);
+	  }
+	
+	public static File getFile() {
         return file;
-	}
+    }
+
+    public static void setFile(File file) {
+        Fichero.file = file;
+    }
+
 }

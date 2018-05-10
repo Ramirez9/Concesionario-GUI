@@ -105,7 +105,6 @@ public class Coche implements Serializable {
 	 * @return 
 	 * @return true si la matrícula es válida, false si no lo es
 	 */
-
 	public static boolean esValida(String matricula){
 		return patternMatricula.matcher(matricula).matches();
 	}

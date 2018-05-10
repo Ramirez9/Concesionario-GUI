@@ -68,9 +68,7 @@ public class MostrarConcesionario extends VentanaPadre {
 	private void mostrarSiguiente() {
 		if (iterador.hasNext()) {
 			copia = iterador.next();
-
 			mostrarCoche(copia);
-
 			comprobarBotones();
 			if (!iterador.hasNext()) {
 				iterador.previous();
@@ -82,9 +80,7 @@ public class MostrarConcesionario extends VentanaPadre {
 	private void mostrarAnterior() {
 		if (iterador.hasPrevious()) {
 			copia = iterador.previous();
-
 			mostrarCoche(copia);
-
 			comprobarBotones();
 		}
 		

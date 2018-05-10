@@ -38,20 +38,20 @@ public class VentanaPadre extends JDialog {
 	/**
 	 * Objetos del paquete swing
 	 */
-	protected final JPanel contentPanel = new JPanel();
-	protected JTextField textField;
-	protected JLabel lblMatricula;
-	protected JLabel lblMarca;
-	protected JLabel lblModelo;
-	protected JButton btnAccion;
-	protected JButton cancelButton;
-	protected JButton anterior;
-	protected JButton siguiente;
-	protected JComboBox<Modelo> comboBoxModelos;
-	protected JComboBox<Marca> comboBoxMarca;
-	protected JRadioButton rdbtnPlata;
-	protected JRadioButton rdbtnRojo;
-	protected JRadioButton rdbtnAzul;
+	 final JPanel contentPanel = new JPanel();
+	 JTextField textField;
+	 JLabel lblMatricula;
+	 JLabel lblMarca;
+	 JLabel lblModelo;
+	 JButton btnAccion;
+	 JButton cancelButton;
+	 JButton anterior;
+	 JButton siguiente;
+	 JComboBox<Modelo> comboBoxModelos;
+	 JComboBox<Marca> comboBoxMarca;
+	 JRadioButton rdbtnPlata;
+	 JRadioButton rdbtnRojo;
+	 JRadioButton rdbtnAzul;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	/**
@@ -113,7 +113,7 @@ public class VentanaPadre extends JDialog {
 		btnAccion.setLocation(230, 272);
 		contentPanel.add(btnAccion);
 
-		cancelButton = new JButton("Cancelar");
+		cancelButton = new JButton("Salir");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -143,7 +143,7 @@ public class VentanaPadre extends JDialog {
 		textField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				if (!Coche.esValida(textField.getText())) {
+				if (!Coche.esValida(textField.getText().trim().toUpperCase())) {
 					textField.setText(textField.getText());
 					textField.setForeground(java.awt.Color.RED);
 				}
@@ -161,10 +161,10 @@ public class VentanaPadre extends JDialog {
 		/**
 		 * Coordenadas bounds
 		 */
-		panelBotones.setBounds(36, 76, 319, 37);
-		rdbtnPlata.setBounds(90, 7, 62, 23);
-		rdbtnRojo.setBounds(154, 7, 62, 23);
-		rdbtnAzul.setBounds(218, 7, 62, 23);
+		panelBotones.setBounds(36, 76, 321, 55);
+		rdbtnPlata.setBounds(90, 25, 62, 23);
+		rdbtnRojo.setBounds(154, 25, 62, 23);
+		rdbtnAzul.setBounds(218, 25, 62, 23);
 		lblMatricula.setBounds(67, 35, 70, 15);
 		lblMarca.setBounds(67, 142, 70, 15);
 		lblModelo.setBounds(67, 187, 46, 14);
@@ -173,6 +173,14 @@ public class VentanaPadre extends JDialog {
 		comboBoxModelos.setBounds(129, 183, 151, 22);
 		comboBoxMarca.setBounds(129, 137, 151, 24);
 		textField.setBounds(129, 31, 151, 23);
+
+	}
+
+	protected void limpiar() {
+		textField.setText("");
+		buttonGroup.clearSelection();
+		comboBoxMarca.setSelectedIndex(-1);
+		comboBoxModelos.setSelectedIndex(-1);
 
 	}
 }

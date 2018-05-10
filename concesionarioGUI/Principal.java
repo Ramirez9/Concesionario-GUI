@@ -1,6 +1,9 @@
 package concesionarioGUI;
 
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -11,12 +14,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
 import concesionario.Concesionario;
+import concesionario.Fichero;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.awt.event.InputEvent;
 import java.awt.Color;
-
 
 /**
  * Clase principal del concesionario de coches con un Menu sobre Fichero, alta,
@@ -28,31 +30,42 @@ import java.awt.Color;
 
 public class Principal extends JFrame {
 
+	
+
 	/**
 	 * Serial version
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final String INFORMACION = "Información";
+	private static final String GUARDADO_EL_CONCESIONARIO = "Se ha guardado el concesionario";
+	private static final String FALLO_AL_GUARDAR = "Fallo al guardar";
 	private static final String ERROR = "ERROR";
 	private static final String CONCESIONARIO_VACIO = "El concesionario está vacío";
 
-	
 	private JFrame frmConcesionario;
 	static Concesionario concesionario = new Concesionario();
+
+	/**
+	 * File chooser
+	 */
+	static JFileChooser fileChooser = new JFileChooser();
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmConcesionario = new JFrame();
+		frmConcesionario.setResizable(false);
 		frmConcesionario.getContentPane().setBackground(new Color(255, 160, 122));
-		frmConcesionario.setTitle("Concesionario IES Gran Capit\u00E1n - Francisco Ram\u00EDrez");
-		frmConcesionario.setBounds(100, 100, 450, 300);
-		frmConcesionario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		actualizarTituloVentana();
+		frmConcesionario.setBounds(100, 100, 530, 300);
+		frmConcesionario.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmConcesionario.getContentPane().setLayout(null);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(new Color(255, 127, 80));
-		menuBar.setBounds(0, 0, 442, 21);
+		menuBar.setBounds(0, 0, 1200, 21);
 		frmConcesionario.getContentPane().add(menuBar);
 
 		botonArchivo(menuBar);
@@ -74,27 +87,58 @@ public class Principal extends JFrame {
 		menuBar.add(mnArchivo);
 
 		JMenuItem mntmNuevoConcesionarioAltmaysn = new JMenuItem("Nuevo concesionario");
+		mntmNuevoConcesionarioAltmaysn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Nuevo fichero
+				nuevo();
+			}
+		});
 		mntmNuevoConcesionarioAltmaysn
 				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_MASK | InputEvent.SHIFT_MASK));
 		mnArchivo.add(mntmNuevoConcesionarioAltmaysn);
 
 		JMenuItem mntmAbrirConcesionario = new JMenuItem("Abrir concesionario...");
+		mntmAbrirConcesionario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Abre ficheros
+				abrir();
+			}
+
+		});
 		mnArchivo.add(mntmAbrirConcesionario);
 
 		JSeparator separator = new JSeparator();
 		mnArchivo.add(separator);
 
 		JMenuItem mntmGuardar = new JMenuItem("Guardar");
+		mntmGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// Guarda el concesionario
+				guardar();
+			}
+		});
+
 		mntmGuardar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		mnArchivo.add(mntmGuardar);
 
 		JMenuItem mntmGuardarComo = new JMenuItem("Guardar como...");
+		mntmGuardarComo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// GuardarComo el concesionario
+				guardarComo();
+			}
+		});
 		mnArchivo.add(mntmGuardarComo);
 
 		JSeparator separator_1 = new JSeparator();
 		mnArchivo.add(separator_1);
 
 		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mntmSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salir();
+			}	
+		});
 		mnArchivo.add(mntmSalir);
 	}
 
@@ -116,7 +160,7 @@ public class Principal extends JFrame {
 		mntmAlta.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		mntmAlta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Alta ventanaAlta = new Alta();
+				VentanaPadre ventanaAlta = new Alta();
 				ventanaAlta.setVisible(true);
 			}
 		});
@@ -135,7 +179,6 @@ public class Principal extends JFrame {
 					Baja ventanaBaja = new Baja();
 					ventanaBaja.setVisible(true);
 				}
-
 			}
 		});
 		mnCoche.add(mntmBaja);
@@ -173,7 +216,7 @@ public class Principal extends JFrame {
 		/**
 		 * Muestra Coche por matrícula
 		 */
-		JMenuItem mntmBuscarPorMatricula = new JMenuItem("Buscar por Matricula");
+		JMenuItem mntmBuscarPorMatricula = new JMenuItem("Buscar Por Matricula");
 		mntmBuscarPorMatricula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (concesionario.isEmpty()) {
@@ -203,7 +246,7 @@ public class Principal extends JFrame {
 				}
 			}
 		});
-		mntmBuscarPorColor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+		mntmBuscarPorColor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK));
 		mnBuscar.add(mntmBuscarPorColor);
 
 	}
@@ -260,6 +303,147 @@ public class Principal extends JFrame {
 		mnVer.add(mntmGithub);
 
 	}
+	// ------------------------------FICHERO------------------------------------------
+
+	/**
+	 * Abre el fileChooser para seleccionar un archivo
+	 * 
+	 * @param mntmAbrirConcesionario
+	 */
+	private void abrir() {
+		if (!comprobarCambios()) {
+			fileChooser.showOpenDialog(this);
+			File file = fileChooser.getSelectedFile();
+			if (file != null) {
+				try {
+					concesionario = Fichero.abrir(file);
+					Fichero.setFile(file);
+					actualizarTituloVentana();
+				} catch (ClassNotFoundException | IOException e1) {
+					JOptionPane.showMessageDialog(null, "No es un archivo de concesionario", ERROR,
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Guarda el archivo
+	 * 
+	 * @param mntmGuardar
+	 * @param mntmGuardarComo
+	 */
+	private void guardar() {
+		if (Fichero.getFile() == null)
+			guardarComo();
+		else {
+			try {
+				Fichero.escribir(Fichero.getFile(), concesionario);
+				Concesionario.setModificado(false);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "No se ha podido guardar el concesionario", ERROR,
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	/**
+	 * GuardaComo el archivo
+	 * 
+	 * @param mntmGuardarComo
+	 */
+	private void guardarComo() {
+		fileChooser.showSaveDialog(this);
+		File file = fileChooser.getSelectedFile();
+		if (file == null) {
+			JOptionPane.showMessageDialog(null, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
+		} else {
+
+			try {
+				Fichero.escribir(file, concesionario);
+				Fichero.setFile(file);
+				Concesionario.setModificado(false);
+				actualizarTituloVentana();
+				JOptionPane.showMessageDialog(null, GUARDADO_EL_CONCESIONARIO, INFORMACION,
+						JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(null, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
+	}
+
+	/**
+	 * Actualiza el titulo del programa.
+	 */
+	private void actualizarTituloVentana() {
+		frmConcesionario.setTitle(generarTitulo());
+
+	}
+
+	/**
+	 * Genera un título dependiendo del archivo.
+	 * 
+	 * @return
+	 */
+	private String generarTitulo() {
+		if (Fichero.getFile() == null)
+			return "Concesionario Francisco: Sin título";
+		return "Concesionario Francisco: " + Fichero.getFile()
+					//getName para obtener solo el nombre del fichero
+					//getAbsolutePath, muestra la ruta
+							.getName();
+	}
+
+	/**
+	 * Comprueba si está modificado
+	 * 
+	 * @param mntmGuardar
+	 * @return
+	 */
+	private boolean comprobarCambios() {
+		if (Concesionario.isModificado()) {
+			switch (JOptionPane.showConfirmDialog(null, "¿Desea guardar los cambios hechos a " + generarTitulo() + "?",
+					"Concesionario - Confirmación", JOptionPane.YES_NO_CANCEL_OPTION)) {
+			case JOptionPane.YES_OPTION:
+				guardar();
+				break;
+			case JOptionPane.NO_OPTION:
+				break;
+			default:
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	/**
+	 * Inicializa el concesionario
+	 */
+	private static void inicializar() {
+		Concesionario.setModificado(false);
+		concesionario = new Concesionario();
+	}
+
+	/**
+	 * Archivo nuevo
+	 */
+	private void nuevo() {
+		if (!comprobarCambios()) {
+			inicializar();
+			Fichero.setFile(null);
+			actualizarTituloVentana();
+		}
+	}
+	/**
+	 * Sale del programa
+	 */
+	private void salir() {
+		if (!comprobarCambios()) {
+			System.exit(0);
+		}
+	}
 
 	/**
 	 * Create the application.
@@ -267,8 +451,6 @@ public class Principal extends JFrame {
 	public Principal() {
 		initialize();
 	}
-
-
 
 	/**
 	 * Launch the application.

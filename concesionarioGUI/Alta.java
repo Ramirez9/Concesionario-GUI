@@ -10,12 +10,14 @@ import concesionario.enumeraciones.*;
 import concesionario.excepciones.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 /**
  * Clase Alta, añade un coche al Concesionario y hereda de VentanaPadre
+ * 
  * @author Francisco Ramírez Ruiz
  *
  */
-public class Alta extends VentanaPadre{
+public class Alta extends VentanaPadre {
 
 	/**
 	 * Serial version
@@ -37,7 +39,7 @@ public class Alta extends VentanaPadre{
 		siguiente.setVisible(false);
 
 		comboBoxMarca.addItemListener(new ItemListener() {
-			
+
 			public void itemStateChanged(ItemEvent arg0) {
 				comboBoxModelos.setModel(new DefaultComboBoxModel(getModelo(comboBoxMarca)));
 			}
@@ -47,27 +49,18 @@ public class Alta extends VentanaPadre{
 		comboBoxMarca.setSelectedItem(null);
 
 		btnAccion.addActionListener(new ActionListener() {
-			boolean bandera = false;
 
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Principal.concesionario.annadir(textField.getText(), (Modelo) comboBoxModelos.getSelectedItem(),
-							getColor());
-					JOptionPane.showMessageDialog(contentPanel, "¡Coche agreado!");
-					bandera = true;
+					Principal.concesionario.annadir(textField.getText().trim().toUpperCase(),
+							(Modelo) comboBoxModelos.getSelectedItem(), getColor());
+					limpiar();
+
 				} catch (CocheYaExisteException | MatriculaNoValidaException | ModeloNoValidoException
 						| ColorNoValidoException e1) {
 					JOptionPane.showMessageDialog(contentPanel, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
-
-				if (bandera) {
-					dispose(); //La ventaja JFrame se limpia, para que no aparezca marcada una vez pulsada
-					textField.setText("");
-					rdbtnAzul.setSelected(false);
-					rdbtnPlata.setSelected(false);
-					rdbtnRojo.setSelected(false);
-				}
-
+				
 			}
 		});
 	}
@@ -85,11 +78,11 @@ public class Alta extends VentanaPadre{
 	private Color getColor() throws ColorNoValidoException {
 		if (rdbtnPlata.isSelected())
 			return Color.PLATA;
-		else if (rdbtnRojo.isSelected())
+		if (rdbtnRojo.isSelected())
 			return Color.ROJO;
-		else if (rdbtnAzul.isSelected())
+		if (rdbtnAzul.isSelected())
 			return Color.AZUL;
-		else
-			throw new ColorNoValidoException("Escoja un color");
+
+		throw new ColorNoValidoException("Escoja un color");
 	}
 }

@@ -2,7 +2,6 @@ package concesionario;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import concesionario.enumeraciones.Color;
 import concesionario.enumeraciones.Modelo;
 import concesionario.excepciones.CocheNoExisteException;
@@ -22,10 +21,15 @@ public class Concesionario implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Coches que se guardarán en el concesionario, ArrayList
 	 */
 	private ArrayList<Coche> concesionario = new ArrayList<Coche>();
+	
+	 private static boolean modificado;
+	 
+	 
 	/**
 	 * Añade un coche al concesionario
 	 * 
@@ -42,6 +46,7 @@ public class Concesionario implements Serializable{
 		Coche coche = new Coche(matricula, modelo, color);
 		if (!concesionario.contains(coche)) {
 			concesionario.add(coche);
+			setModificado(true);
 		} else {
 			throw new CocheYaExisteException("El coche ya existe");
 		}
@@ -58,6 +63,7 @@ public class Concesionario implements Serializable{
 	public boolean eliminar(String matricula) throws CocheNoExisteException, MatriculaNoValidaException {
 		Coche coche = new Coche(matricula);
 		if (concesionario.contains(coche)) {
+			setModificado(true);
 			return concesionario.remove(coche);
 		} else {
 			throw new CocheNoExisteException("El coche no existe");
@@ -128,14 +134,21 @@ public class Concesionario implements Serializable{
 	public int size() {
 		return concesionario.size();
 	}
+	
 	/**
 	 * No hay coches
 	 * @return
 	 */
 	public boolean isEmpty() {
 		return concesionario.isEmpty();
+		
 		}
 	
+	/**
+	 * Devuelve el concesionario
+	 * 
+	 * @return concesionario
+	 */
 	public ArrayList<Coche> getConcesionario(){
 		return concesionario;
 	}
@@ -154,5 +167,15 @@ public class Concesionario implements Serializable{
 
 		return cadena.toString();
 	}
+
+	public static boolean isModificado() {
+		return modificado;
+	}
+
+	public static void setModificado(boolean modificado) {
+		Concesionario.modificado = modificado;
+	}
+	
+    
 
 }

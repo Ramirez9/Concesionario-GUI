@@ -41,14 +41,17 @@ public class MostrarMatricula extends VentanaPadre {
 			public void actionPerformed(ActionEvent e) {
 				Coche coche;
 				try {
-					coche = Principal.concesionario.getCoche(textField.getText());
+					coche = Principal.concesionario.getCoche(textField.getText().trim().toUpperCase());
+					
 					mostrarCoche(coche);
+					
 				} catch (MatriculaNoValidaException | CocheNoExisteException  e1) {
 					JOptionPane.showMessageDialog(contentPanel, "La matrícula no está registrada", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
+		
 	}
 
 	private void mostrarCoche(Coche coche) {

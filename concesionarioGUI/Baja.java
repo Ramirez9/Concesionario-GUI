@@ -3,7 +3,6 @@ package concesionarioGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-import javax.swing.border.TitledBorder;
 import concesionario.excepciones.*;
 
 /**
@@ -24,15 +23,13 @@ public class Baja extends VentanaPadre{
 	 */
 	public Baja() {
 		super();
+		setTitle("Baja de un coche");
 		rdbtnAzul.setEnabled(false);
 		rdbtnRojo.setEnabled(false);
 		rdbtnPlata.setEnabled(false);
 		comboBoxModelos.setEnabled(false);
 		comboBoxMarca.setEnabled(false);
 		setModal(true);
-
-		contentPanel.setBorder(
-				new TitledBorder(null, "Baja de coches", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		contentPanel.setLayout(null);
 
@@ -44,13 +41,12 @@ public class Baja extends VentanaPadre{
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					Principal.concesionario.eliminar(textField.getText());
-					JOptionPane.showMessageDialog(contentPanel, "Coche eliminado correctamente", "Información",
-							JOptionPane.INFORMATION_MESSAGE);
+					Principal.concesionario.eliminar(textField.getText().trim().toUpperCase());
+					limpiar();
 				} catch (CocheNoExisteException | MatriculaNoValidaException e1) {
 					JOptionPane.showMessageDialog(contentPanel, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
-				dispose();
+				
 			}
 		});
 
