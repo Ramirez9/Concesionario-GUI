@@ -20,15 +20,16 @@ Con respecto a los ficheros:
 Con respecto al GUI:
 * 1.-**Paquetes**. Deberás olvidarte del paquete utiles. Necesitas un paquete sólo para el GUI, donde tendrás la clase **Principal.java** que abrirá la ventana principal. Recuerda que las excepciones han de estar en el paquete que las crean.
 * 2.-**La página** principal tendrá como título el fichero abierto ("Sin título" en caso de no tener asociado ningún fichero). Será al estilo del Notepad.
-* 3.-**Una barra de menú** (JMenuBar) con los siguientes menús (JMenu): Ficheros, Coches, Ayuda. Tendrá las teclas de acceso rápido asociadas a cada elemento del menú, así como mnemotécnicos. Añade también separadores entre elementos del menú. Será al estilo del Notepad. (como en el recurso de los alumnos Juan Antonio Romero y Elisa Navarro)
+* 3.-**Una barra de menú** (JMenuBar) con los siguientes menús (JMenu): Ficheros, Coches, Ayuda. Tendrá las teclas de acceso rápido asociadas a cada elemento del menú, así como mnemotécnicos. Añade también separadores entre elementos del menú. Será al estilo del Notepad.
 * 4.-**Un diálogo para trabajar con ficheros** (JFileChooser). Ha de usar un filtro para visualizar los ficheros con extensión ".obj"
-* 5.-**Un diálogo para trabajar con Coches** (JDialog). El diálogo contendrá: 
-Una caja de texto (JTextField) debidamente etiquetada(JLabel) para las matrículas, Al perder el foco cambiará el color si la matrícula no es válida. Al editar, la matrícula siempre lo hará en negro.
-Una lista (JList) para el modelo y otra para la marca. Las listas han de estar sincronizadas.
-Tres radio buttons con los tres colores (tres JRadioButton y un ButtonGroup
-Selecciona los tres, menú contextual > set ButtonGroup
- con un borde etiquetado Color
-Selecciona los tres, menú contextual > Surround with > javax.swing.JPanel border) y 
-Botones (JButton) para Salir o realizar la acción (crear, eliminar, mostrar...).
-Los mensajes de error (JOptionPane) han de ser lo más conciso posible. Quizás deban basarse en el atributo message de las excepciones.
-El menú ayuda dispondrá de un Ver ayuda y Acerca de... 
+* 5.-**Un diálogo para trabajar con Coches** (JDialog). El diálogo contendrá:
+
+   * Una caja de texto (JTextField) debidamente etiquetada(JLabel) para las matrículas, Al perder el foco cambiará el color si      * la matrícula no es válida. Al editar, la matrícula siempre lo hará en negro.
+   * Una lista (JList) para el modelo y otra para la marca. Las listas han de estar sincronizadas.
+   * Tres radio buttons con los tres colores (tres JRadioButton y un ButtonGroup
+      * Selecciona los tres, menú contextual > set ButtonGroup
+   * con un borde etiquetado Color
+      * Selecciona los tres, menú contextual > Surround with > javax.swing.JPanel border) y 
+   * Botones (JButton) para Salir o realizar la acción (crear, eliminar, mostrar...).
+* 6.-**Los mensajes de error** (JOptionPane) han de ser lo más conciso posible. Quizás deban basarse en el atributo message de las excepciones.
+* 7.-**El menú ayuda** dispondrá de un Ver ayuda y Acerca de... 
