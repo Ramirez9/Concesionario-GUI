@@ -1,4 +1,4 @@
-# Concesionario-GUI
+# Concesionario-GUI - Francisco Ramírez Ruiz
 
 Sobre la versión anterior del Concesionario de coches con excepciones del siguiente repositorio, crea otra versión añadiéndole tanto Ficheros como el entorno gráfico para la comunicación con el usuario. Nos fijaremos en el Notepad para hacerlo lo más parecido posible. 
 Con respecto a los ficheros:
