@@ -24,7 +24,7 @@ Con respecto al GUI:
 * 4.-**Un diálogo para trabajar con ficheros** (JFileChooser). Ha de usar un filtro para visualizar los ficheros con extensión ".obj"
 * 5.-**Un diálogo para trabajar con Coches** (JDialog). El diálogo contendrá:
 
-   * Una caja de texto (JTextField) debidamente etiquetada(JLabel) para las matrículas, Al perder el foco cambiará el color si      * la matrícula no es válida. Al editar, la matrícula siempre lo hará en negro.
+   * Una caja de texto (JTextField) debidamente etiquetada(JLabel) para las matrículas, Al perder el foco cambiará el color si        la matrícula no es válida. Al editar, la matrícula siempre lo hará en negro.
    * Una lista (JList) para el modelo y otra para la marca. Las listas han de estar sincronizadas.
    * Tres radio buttons con los tres colores (tres JRadioButton y un ButtonGroup
       * Selecciona los tres, menú contextual > set ButtonGroup
