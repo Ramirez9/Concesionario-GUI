@@ -53,21 +53,4 @@ public class MostrarMatricula extends VentanaPadre {
 		});
 		
 	}
-
-	private void mostrarCoche(Coche coche) {
-		switch (coche.getColor()) {
-		case PLATA:
-			rdbtnPlata.setSelected(true);
-			break;
-		case ROJO:
-			rdbtnRojo.setSelected(true);
-			break;
-		case AZUL:
-			rdbtnAzul.setSelected(true);
-		}
-		comboBoxMarca.addItem(coche.getModelo().getMarca());
-		comboBoxMarca.setSelectedItem(coche.getModelo().getMarca());
-		comboBoxModelos.addItem(coche.getModelo());
-		comboBoxModelos.setSelectedItem(coche.getModelo());
-	}
 }

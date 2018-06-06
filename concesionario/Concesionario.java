@@ -27,7 +27,7 @@ public class Concesionario implements Serializable{
 	 */
 	private ArrayList<Coche> concesionario = new ArrayList<Coche>();
 	
-	 private static boolean modificado;
+	private static boolean modificado;
 	 
 	 
 	/**

@@ -40,20 +40,33 @@ public class VentanaPadre extends JDialog {
 	 */
 	 final JPanel contentPanel = new JPanel();
 	 JTextField textField;
+	 /**
+	  * 
+	  */
 	 JLabel lblMatricula;
 	 JLabel lblMarca;
 	 JLabel lblModelo;
+	 /**
+	  * Botones
+	  */
 	 JButton btnAccion;
 	 JButton cancelButton;
 	 JButton anterior;
 	 JButton siguiente;
+	 /**
+	  * ComboBoxs
+	  */
 	 JComboBox<Modelo> comboBoxModelos;
 	 JComboBox<Marca> comboBoxMarca;
+	 /**
+	  * Radio - Botones Plata, Rojo, Azul
+	  */
 	 JRadioButton rdbtnPlata;
 	 JRadioButton rdbtnRojo;
 	 JRadioButton rdbtnAzul;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
+	
 	/**
 	 * Create the dialog.
 	 */
@@ -104,11 +117,11 @@ public class VentanaPadre extends JDialog {
 
 
 		btnAccion = new JButton("");
+		btnAccion.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnAccion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnAccion.setHorizontalAlignment(SwingConstants.RIGHT);
 		btnAccion.setSize(98, 23);
 		btnAccion.setLocation(230, 272);
 		contentPanel.add(btnAccion);
@@ -182,5 +195,23 @@ public class VentanaPadre extends JDialog {
 		comboBoxMarca.setSelectedIndex(-1);
 		comboBoxModelos.setSelectedIndex(-1);
 
+	}
+	
+	protected void mostrarCoche(Coche coche) {
+		textField.setText(coche.getMatricula());
+		switch (coche.getColor()) {
+		case PLATA:
+			rdbtnPlata.setSelected(true);
+			break;
+		case ROJO:
+			rdbtnRojo.setSelected(true);
+			break;
+		case AZUL:
+			rdbtnAzul.setSelected(true);
+		}
+		comboBoxMarca.addItem(coche.getModelo().getMarca());
+		comboBoxMarca.setSelectedItem(coche.getModelo().getMarca());
+		comboBoxModelos.addItem(coche.getModelo());
+		comboBoxModelos.setSelectedItem(coche.getModelo());
 	}
 }

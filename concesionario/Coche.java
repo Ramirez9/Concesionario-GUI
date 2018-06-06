@@ -78,12 +78,9 @@ public class Coche implements Serializable {
 	 * @throws MatriculaNoValidaException
 	 */
 	private void setMatricula(String matricula) throws MatriculaNoValidaException {
-		if (esValida(matricula)) {
-			this.matricula = estandarizarMatricula(matricula);
-		} else {
+		if (!esValida(matricula)) 
 			throw new MatriculaNoValidaException("La matrícula no es válida");
-		}
-
+		this.matricula = estandarizarMatricula(matricula);
 	}
 
 	/**
@@ -119,12 +116,10 @@ public class Coche implements Serializable {
 	 * @throws ModeloNoValidoException
 	 */
 	private void setModelo(Modelo modelo) throws ModeloNoValidoException {
-		if (modelo != null) {
+		if (modelo != null) 
 			this.modelo = modelo;
-		} else {
+		else 
 			throw new ModeloNoValidoException("El modelo no es válido");
-		}
-
 	}
 
 	public Color getColor() {

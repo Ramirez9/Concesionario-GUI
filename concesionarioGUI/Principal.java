@@ -13,12 +13,16 @@ import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import concesionario.Concesionario;
 import concesionario.Fichero;
 import java.awt.event.KeyEvent;
 import java.net.URISyntaxException;
 import java.awt.event.InputEvent;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Clase principal del concesionario de coches con un Menu sobre Fichero, alta,
@@ -29,8 +33,6 @@ import java.awt.Color;
  */
 
 public class Principal extends JFrame {
-
-	
 
 	/**
 	 * Serial version
@@ -45,17 +47,28 @@ public class Principal extends JFrame {
 
 	private JFrame frmConcesionario;
 	static Concesionario concesionario = new Concesionario();
+	private Ayuda ayuda = null;
 
 	/**
 	 * File chooser
 	 */
 	static JFileChooser fileChooser = new JFileChooser();
-
+	
+	FileNameExtensionFilter filter = new FileNameExtensionFilter(".obj","obj");
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//setFileFilter añade el filtro a nuestro FileChooser
+		fileChooser.setFileFilter(filter);
 		frmConcesionario = new JFrame();
+		frmConcesionario.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				salir();
+			}
+		});
 		frmConcesionario.setResizable(false);
 		frmConcesionario.getContentPane().setBackground(new Color(255, 160, 122));
 		actualizarTituloVentana();
@@ -173,9 +186,9 @@ public class Principal extends JFrame {
 		mntmBaja.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK));
 		mntmBaja.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (concesionario.isEmpty()) {
-					JOptionPane.showMessageDialog(mntmBaja, CONCESIONARIO_VACIO, ERROR, JOptionPane.ERROR_MESSAGE);
-				} else {
+				if (vacio()) 
+					mensajeVacio();
+				else {
 					Baja ventanaBaja = new Baja();
 					ventanaBaja.setVisible(true);
 				}
@@ -190,9 +203,9 @@ public class Principal extends JFrame {
 		mntmMostrarConcesionario.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
 		mntmMostrarConcesionario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (concesionario.isEmpty()) {
-					JOptionPane.showMessageDialog(mntmBaja, CONCESIONARIO_VACIO, ERROR, JOptionPane.ERROR_MESSAGE);
-				} else {
+				if (vacio()) 
+					mensajeVacio();
+				else {
 					MostrarConcesionario ventanaMostrarConcesionario = new MostrarConcesionario();
 					ventanaMostrarConcesionario.setVisible(true);
 				}
@@ -219,10 +232,9 @@ public class Principal extends JFrame {
 		JMenuItem mntmBuscarPorMatricula = new JMenuItem("Buscar Por Matricula");
 		mntmBuscarPorMatricula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (concesionario.isEmpty()) {
-					JOptionPane.showMessageDialog(mntmBuscarPorMatricula, CONCESIONARIO_VACIO, ERROR,
-							JOptionPane.ERROR_MESSAGE);
-				} else {
+				if (vacio()) 
+					mensajeVacio();
+				else {
 					MostrarMatricula mostrarMatricula = new MostrarMatricula();
 					mostrarMatricula.setVisible(true);
 				}
@@ -237,10 +249,9 @@ public class Principal extends JFrame {
 		JMenuItem mntmBuscarPorColor = new JMenuItem("Buscar Por Color");
 		mntmBuscarPorColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (concesionario.isEmpty()) {
-					JOptionPane.showMessageDialog(mntmBuscarPorColor, CONCESIONARIO_VACIO, ERROR,
-							JOptionPane.ERROR_MESSAGE);
-				} else {
+				if (vacio())
+					mensajeVacio();
+				else {
 					SeleccionarColor seleccionarColor = new SeleccionarColor();
 					seleccionarColor.setVisible(true);
 				}
@@ -295,13 +306,30 @@ public class Principal extends JFrame {
 		JMenuItem mntmAyuda = new JMenuItem("Ayuda");
 		mntmAyuda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Ayuda ayuda = new Ayuda();
+				if(ayuda == null)
+					ayuda = new Ayuda();
 				ayuda.setVisible(true);
 			}
 		});
 		mnVer.add(mntmAyuda);
 		mnVer.add(mntmGithub);
 
+	}
+	
+	/**
+	 * concesionario vacio
+	 * @return
+	 */
+	private boolean vacio() {
+		return concesionario.isEmpty();
+	}
+	
+	/**
+	 * Mensaje de concesionario vacio
+	 */
+	private void mensajeVacio() {
+		JOptionPane.showMessageDialog(null, CONCESIONARIO_VACIO, ERROR,
+				JOptionPane.ERROR_MESSAGE);
 	}
 	// ------------------------------FICHERO------------------------------------------
 
@@ -317,10 +345,9 @@ public class Principal extends JFrame {
 			if (file != null) {
 				try {
 					concesionario = Fichero.abrir(file);
-					Fichero.setFile(file);
-					actualizarTituloVentana();
+					actualizarFichero(file);
 				} catch (ClassNotFoundException | IOException e1) {
-					JOptionPane.showMessageDialog(null, "No es un archivo de concesionario", ERROR,
+					JOptionPane.showMessageDialog(frmConcesionario, "No es un archivo de concesionario", ERROR,
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -341,7 +368,7 @@ public class Principal extends JFrame {
 				Fichero.escribir(Fichero.getFile(), concesionario);
 				Concesionario.setModificado(false);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "No se ha podido guardar el concesionario", ERROR,
+				JOptionPane.showMessageDialog(frmConcesionario, "No se ha podido guardar el concesionario", ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -356,21 +383,29 @@ public class Principal extends JFrame {
 		fileChooser.showSaveDialog(this);
 		File file = fileChooser.getSelectedFile();
 		if (file == null) {
-			JOptionPane.showMessageDialog(null, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frmConcesionario, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
 		} else {
 
 			try {
 				Fichero.escribir(file, concesionario);
-				Fichero.setFile(file);
+				actualizarFichero(file);
 				Concesionario.setModificado(false);
-				actualizarTituloVentana();
-				JOptionPane.showMessageDialog(null, GUARDADO_EL_CONCESIONARIO, INFORMACION,
+				JOptionPane.showMessageDialog(frmConcesionario, GUARDADO_EL_CONCESIONARIO, INFORMACION,
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frmConcesionario, FALLO_AL_GUARDAR, ERROR, JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
+	}
+	
+	/**
+	 * Actualiza el Fichero
+	 * @param file
+	 */
+	private void actualizarFichero(File file) {
+		Fichero.setFile(file);
+		actualizarTituloVentana();
 	}
 
 	/**
@@ -403,7 +438,7 @@ public class Principal extends JFrame {
 	 */
 	private boolean comprobarCambios() {
 		if (Concesionario.isModificado()) {
-			switch (JOptionPane.showConfirmDialog(null, "¿Desea guardar los cambios hechos a " + generarTitulo() + "?",
+			switch (JOptionPane.showConfirmDialog(frmConcesionario, "¿Desea guardar los cambios hechos a " + generarTitulo() + "?",
 					"Concesionario - Confirmación", JOptionPane.YES_NO_CANCEL_OPTION)) {
 			case JOptionPane.YES_OPTION:
 				guardar();

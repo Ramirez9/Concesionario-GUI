@@ -1,6 +1,8 @@
 package concesionarioGUI;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ListIterator;
 import java.awt.event.ActionEvent;
 import concesionario.Coche;
@@ -15,8 +17,9 @@ public class MostrarConcesionario extends VentanaPadre {
 	 * Serial version
 	 */
 	private static final long serialVersionUID = 1L;
-	private ListIterator<Coche> iterador;
-	private Coche copia;
+	protected ListIterator<Coche> iterador;
+	protected Coche coche;
+	protected int camino = 0;
 
 	/**
 	 * Create the dialog.
@@ -37,91 +40,76 @@ public class MostrarConcesionario extends VentanaPadre {
 		comboBoxMarca.setEnabled(false);
 		comboBoxModelos.setEnabled(false);
 
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				comprobarBotones();
+				siguiente();
+				mostrarCoche(coche);
+			}
+		});
+		
+		accionBotones();
+	}
+	
+	/**
+	 * Siguiente coche
+	 */
+	protected void siguiente() {
+		if (iterador.hasNext()) 
+			coche = iterador.next();
+		if(camino == 1)
+			if(iterador.hasNext())
+				coche = iterador.next();
+			camino = 0;	
+	}
+
+	/**
+	 * Vuelve al coche anterior
+	 */
+	protected void anterior() {
+		if (iterador.hasPrevious()) 
+			coche = iterador.previous();
+		if(camino == 0)
+			if(iterador.hasPrevious())
+				coche = iterador.previous();
+			camino = 1;
+	}
+	/**
+	 * Comprueba los botones
+	 */
+	protected void comprobarBotones() {
+		siguiente.setEnabled(true);
+		anterior.setEnabled(true);
+		if (!iterador.hasNext())
+			siguiente.setEnabled(false);
+		if (!iterador.hasPrevious())
+			anterior.setEnabled(false);
+
+		if (Principal.concesionario.size() == 1) {
+			siguiente.setEnabled(false);
+			anterior.setEnabled(false);
+		}
+	}
+	
+	/**
+	 * Acción de los botones
+	 */
+	protected void accionBotones() {
 		anterior.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mostrarAnterior();
+				anterior();
+				mostrarCoche(coche);
+				comprobarBotones();
 			}
 		});
 
 		siguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mostrarSiguiente();
+				siguiente();
+				mostrarCoche(coche);
+				comprobarBotones();
 			}
 		});
-		actualizar();
-
-	}
-
-	void actualizar() {
-		if (Principal.concesionario.size() == 1) {
-			siguiente.setEnabled(false);
-			anterior.setEnabled(false);
-		} else {
-			siguiente.setEnabled(true);
-			anterior.setEnabled(false);
-		}
-		copia = iterador.next();
-		
-		mostrarCoche(copia);
-	}
-
-	private void mostrarSiguiente() {
-		if (iterador.hasNext()) {
-			copia = iterador.next();
-			mostrarCoche(copia);
-			comprobarBotones();
-			if (!iterador.hasNext()) {
-				iterador.previous();
-			}
-			
-		}
-	}
-
-	private void mostrarAnterior() {
-		if (iterador.hasPrevious()) {
-			copia = iterador.previous();
-			mostrarCoche(copia);
-			comprobarBotones();
-		}
-		
-		if (!iterador.hasPrevious()) {
-			iterador.next();
-		}
-	}
-	/**
-	 * Muestra el coche según sus características
-	 * @param coche
-	 */
-	private void mostrarCoche(Coche coche) {
-		textField.setText(coche.getMatricula());
-		switch (coche.getColor()) {
-		case PLATA:
-			rdbtnPlata.setSelected(true);
-			break;
-		case ROJO:
-			rdbtnRojo.setSelected(true);
-			break;
-		case AZUL:
-			rdbtnAzul.setSelected(true);
-		}
-		comboBoxMarca.addItem(coche.getModelo().getMarca());
-		comboBoxMarca.setSelectedItem(coche.getModelo().getMarca());
-		comboBoxModelos.addItem(coche.getModelo());
-		comboBoxModelos.setSelectedItem(coche.getModelo());
-	}
-	/**
-	 * Comprueba la posición de la ArrayList para mostrar o no el/los botones
-	 */
-	void comprobarBotones() {
-		if (!iterador.hasNext()) {
-			siguiente.setEnabled(false);
-		} else {
-			siguiente.setEnabled(true);
-		}
-		if (!iterador.hasPrevious()) {
-			anterior.setEnabled(false);
-		} else {
-			anterior.setEnabled(true);
-		}
 	}
 }
