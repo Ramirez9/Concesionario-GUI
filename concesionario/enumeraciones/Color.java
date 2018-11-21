@@ -2,7 +2,8 @@ package concesionario.enumeraciones;
 /**
  * Colores de los coches, "Plata, rojo y azul"
  * 
- * @author 	Francisco Ramírez
+ * Issue resuelto
+ * @author 	Francisco Ramï¿½rez
  * @version 1.0
  *
  */
@@ -23,7 +24,7 @@ public enum Color {
 	private static final Color[] VALUES = values();
 
 	/**
-	 * Genera las distintas opciones para manejarlas con un menú
+	 * Genera las distintas opciones para manejarlas con un menï¿½
 	 * 
 	 * @return array de string con las opciones
 	 */
